@@ -1,0 +1,96 @@
+unit frmPrincipal;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Mask, Vcl.ExtCtrls;
+
+type
+  TF_Principal = class(TForm)
+    MemoTexto: TMemo;
+    EditSubstituir: TLabeledEdit;
+    EditPalavra: TLabeledEdit;
+    BtnSubstituir: TButton;
+    procedure BtnSubstituirClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    function StringReplace(Texto, PalavraSub, NewPalavra: String): String;
+  end;
+
+var
+  F_Principal: TF_Principal;
+
+implementation
+
+{$R *.dfm}
+
+procedure TF_Principal.BtnSubstituirClick(Sender: TObject);
+var
+  sNewTexto: String;
+begin
+  //Verifico se o Memo está vazio
+  if (MemoTexto.Lines.Text = '') then
+  begin
+    MessageDlg('Insira uma frase!', TMsgDlgType.mtWarning, [TMsgDlgBtn.mbOK], 0);
+    Abort;
+  end;
+
+  if VarIsEmpty(EditSubstituir.Text) then
+    Abort;
+
+
+  sNewTexto := StringReplace(MemoTexto.Text, EditSubstituir.Text, EditPalavra.Text);
+  MemoTexto.Clear;
+  MemoTexto.Text := sNewTexto;
+end;
+
+function TF_Principal.StringReplace(Texto, PalavraSub,
+  NewPalavra: String): String;
+var
+  sNewTexto: String;
+  I : Integer;
+begin
+  I := 1;
+
+  //Verifico o número da letras da palavra a ser substituida, se for igual a zero
+
+  if (Length(PalavraSub) = 0) then
+  begin
+    MessageDlg('Insira uma palavra para ser substituida!',
+                TMsgDlgType.mtWarning, [TMsgDlgBtn.mbOK], 0);
+    Abort;
+  end;
+
+  //Verifico o texto
+  While (I < Length(Texto)) do
+  begin
+    //Pego a posição + qtd de caracteres da palavra e verifico com a palavra
+    if (Copy(MemoTexto.Text, I, Length(PalavraSub)) = PalavraSub) then
+    begin
+      //Se for igual, adiciono no texto a palavra a ser substituida
+      sNewTexto := sNewTexto + NewPalavra;
+
+      {
+        Alimento a variavel com a qtd de caracteres da palavra substituida
+        pois os demais caracteres não será preciso conferir, já que foi substituido
+      }
+      I := I + Length(PalavraSub);
+    end
+    else
+    begin
+      //Caso não seja, paso apenas a letra para o novo texto e +1 posição para verificar
+      sNewTexto := sNewTexto + Copy(MemoTexto.Text, I, 1);
+      I := I + 1;
+    end;
+
+  end;
+
+  //Retorno o nono texto
+  Result := sNewTexto;
+
+end;
+
+end.

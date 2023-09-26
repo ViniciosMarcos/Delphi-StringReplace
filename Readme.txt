@@ -1,0 +1,1 @@
+A aplicação de lógica de programação tem como objetivo a criação de uma funcionalidade semelhante ao 'StringReplace' do Delphi, permitindo que os usuários substituam partes específicas de uma cadeia de caracteres por outras definidas por eles.
